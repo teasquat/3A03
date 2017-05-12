@@ -47,6 +47,8 @@ start:
 	or eax, 1 << 31
 	or eax, 1 << 16
 	mov cr0, eax
+
+	lgdt [gdt64.pointer]
 	
 	hlt
 
@@ -57,8 +59,21 @@ section .bss
 align 4096
 
 p4_table:
-    resb 4096
+	resb 4096
 p3_table:
-    resb 4096
+	resb 4096
 p2_table:
-    resb 4096
+	resb 4096
+
+; gdt
+section .rodata
+gdt64:
+	dq 0
+.code: equ $ - gdt64
+	dq (1<<44) | (1<<47) | (1<<41) | (1<<43) | (1<<53)
+.data: equ $ - gdt64
+	dq (1<<44) | (1<<47) | (1<<41)
+
+.pointer:
+    dw .pointer - gdt64 - 1
+    dq gdt64
