@@ -1,16 +1,21 @@
 #![feature(lang_items)]
 #![no_std]
 
+extern crate rlibc;
+
 mod vga_buffer;
+
 use vga_buffer::Writer;
+use core::fmt::Write;
 
 #[lang = "eh_personality"]
 extern fn eh_personality() {
 
 }
 
+#[no_mangle]
 #[lang = "panic_fmt"]
-extern fn rust_begin_panic() -> ! {
+extern fn panic_fmt() -> ! {
 	loop {}
 }
 
@@ -23,8 +28,7 @@ pub extern fn kmain() -> ! {
 		row: 0,
 	};
 
-	writer.print("Hello, World!\nYou're welcome here.");
-	writer.print(" Hello Hello");
+	write!(writer, "Hello {}\n{}", "world!", 20 * 7);
 
 	loop {}
 }

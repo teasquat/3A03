@@ -10,5 +10,6 @@
     "target-pointer-width": "64",
     "features": "-mmx,-fxsr,-sse,-sse2,+soft-float",
     "disable-redzone": true,
-    "eliminate-frame-pointer": false
+    "eliminate-frame-pointer": false,
+    "panic-strategy": "abort"
 }

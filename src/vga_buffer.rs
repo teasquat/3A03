@@ -1,3 +1,5 @@
+use core::fmt;
+
 const HEIGHT: usize = 25;
 const WIDTH: usize = 160;
 
@@ -7,12 +9,6 @@ pub struct Writer {
 }
 
 impl Writer {
-    pub fn print(&mut self, string: &str) {
-        for byte in string.bytes() {
-            self.write_byte(byte);
-        }
-    }
-
     pub fn write_byte(&mut self, byte: u8) {
         match byte {
             b'\n' => self.new_line(),
@@ -36,5 +32,14 @@ impl Writer {
     fn new_line(&mut self) {
         self.col  = 0;
         self.row += 1;
+    }
+}
+
+impl fmt::Write for Writer {
+    fn write_str(&mut self, s: &str) -> fmt::Result {
+        for byte in s.bytes() {
+          self.write_byte(byte)
+        }
+        Ok(())
     }
 }
