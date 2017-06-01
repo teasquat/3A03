@@ -1,4 +1,5 @@
 use core::fmt;
+use spin::Mutex;
 
 const HEIGHT: usize = 25;
 const WIDTH: usize = 160;
@@ -30,7 +31,7 @@ impl Writer {
     }
 
     fn new_line(&mut self) {
-        self.col  = 0;
+        self.col = 0;
         self.row += 1;
     }
 }
@@ -38,8 +39,23 @@ impl Writer {
 impl fmt::Write for Writer {
     fn write_str(&mut self, s: &str) -> fmt::Result {
         for byte in s.bytes() {
-          self.write_byte(byte)
+            self.write_byte(byte)
         }
         Ok(())
     }
+}
+
+pub static WRITER: Mutex<Writer> = Mutex::new(Writer { col: 0, row: 0 });
+
+macro_rules! print {
+    ($($arg:tt)*) => ({
+        use core::fmt::Write;
+        let mut writer = $crate::vga_buffer::WRITER.lock();
+        writer.write_fmt(format_args!($($arg)*)).unwrap();
+    });
+}
+
+macro_rules! println {
+    ($fmt:expr) => (print!(concat!($fmt, "\n")));
+    ($fmt:expr, $($arg:tt)*) => (print!(concat!($fmt, "\n"), $($arg)*));
 }
