@@ -8,7 +8,6 @@ extern crate multiboot2;
 #[macro_use]
 mod vga_buffer;
 
-use vga_buffer::WRITER;
 use core::fmt::Write;
 
 #[lang = "eh_personality"]
