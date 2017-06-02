@@ -12,11 +12,11 @@ use vga_buffer::WRITER;
 use core::fmt::Write;
 
 #[lang = "eh_personality"]
-extern "C" fn eh_personality() {}
+extern fn eh_personality() {}
 
 #[no_mangle]
 #[lang = "panic_fmt"]
-pub extern "C" fn panic_fmt(fmt: core::fmt::Arguments, file: &'static str, line: u32) -> ! {
+pub extern fn panic_fmt(fmt: core::fmt::Arguments, file: &'static str, line: u32) -> ! {
     println!("\n\nPANIC in {} at line {}:", file, line);
     println!("    {}", fmt);
     loop {}
@@ -24,7 +24,7 @@ pub extern "C" fn panic_fmt(fmt: core::fmt::Arguments, file: &'static str, line:
 
 
 #[no_mangle]
-pub extern "C" fn kmain(multiboot_info_address: usize) -> ! {
+pub extern fn kmain(multiboot_info_address: usize) -> ! {
 
     println!("Hello world!\n");
 
