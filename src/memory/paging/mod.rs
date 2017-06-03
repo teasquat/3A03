@@ -44,7 +44,7 @@ pub struct ActivePageTable {
 
 impl ActivePageTable {
     pub unsafe fn new() -> ActivePageTable {
-        ActivePageTable{ p4: Unique::new(table::P4) }
+        ActivePageTable { p4: Unique::new(table::P4) }
     }
 
     fn p4(&self) -> &Table<Level4> {
@@ -126,10 +126,10 @@ impl ActivePageTable {
         assert!(self.translate(page.start_address()).is_some());
 
         let p1 = self.p4_mut()
-                     .next_table_mut(page.p4_index())
-                     .and_then(|p3| p3.next_table_mut(page.p3_index()))
-                     .and_then(|p2| p2.next_table_mut(page.p2_index()))
-                     .expect("mapping code does not support huge pages");
+            .next_table_mut(page.p4_index())
+            .and_then(|p3| p3.next_table_mut(page.p3_index()))
+            .and_then(|p2| p2.next_table_mut(page.p2_index()))
+            .expect("mapping code does not support huge pages");
         let frame = p1[page.p1_index()].pointed_frame().unwrap();
         p1[page.p1_index()].set_unused();
         // TODO free p(1,2,3) table if empty
