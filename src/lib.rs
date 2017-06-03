@@ -1,4 +1,4 @@
-#![feature(lang_items,const_fn)]
+#![feature(lang_items,const_fn,unique)]
 #![no_std]
 
 #[macro_use]
