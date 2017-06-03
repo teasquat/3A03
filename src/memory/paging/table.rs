@@ -3,6 +3,8 @@ use memory::paging::entry::*;
 use memory::paging::ENTRY_COUNT;
 use core::marker::PhantomData;
 
+pub const P4: *mut Table<Level4> = 0xffffffff_fffff000 as *mut _;
+
 pub struct Table<L: TableLevel> {
     entries: [Entry; ENTRY_COUNT],
     level: PhantomData<L>,
