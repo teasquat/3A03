@@ -136,3 +136,11 @@ impl ActivePageTable {
         allocator.deallocate_frame(frame);
     }
 }
+
+pub fn test_paging<A>(allocator: &mut A)
+    where A: FrameAllocator
+{
+    let mut page_table = unsafe { ActivePageTable::new() };
+
+    // test it
+}
