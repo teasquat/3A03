@@ -9,5 +9,5 @@ pub type PhysicalAddress = usize;
 pub type VirtualAddress = usize;
 
 pub struct Page {
-   number: usize,
+    number: usize,
 }
