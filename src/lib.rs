@@ -7,8 +7,9 @@ extern crate multiboot2;
 
 #[macro_use]
 mod vga_buffer;
+mod memory;
 
-use core::fmt::Write;
+use memory::{FrameAllocator, AreaFrameAllocator};
 
 #[lang = "eh_personality"]
 extern fn eh_personality() {}
@@ -30,26 +31,9 @@ pub extern fn kmain(multiboot_info_address: usize) -> ! {
     let boot_info = unsafe { multiboot2::load(multiboot_info_address) };
     let memory_map_tag = boot_info.memory_map_tag().expect("Memory map tag required");
 
-    println!("memory areas:");
-    for area in memory_map_tag.memory_areas() {
-        println!("    start: 0x{:x}, length: 0x{:x}",
-                 area.base_addr,
-                 area.length);
-    }
-
     let elf_sections_tag = boot_info
         .elf_sections_tag()
         .expect("Elf-sections tag required");
-
-    println!("kernel sections:");
-    for section in elf_sections_tag.sections() {
-        println!("    addr:  0x{:x}, size: 0x{:x}, flags: 0x{:x}",
-                 section.addr,
-                 section.size,
-                 section.flags);
-    }
-
-    println!("");
 
     let kernel_start = elf_sections_tag.sections().map(|s| s.addr).min().unwrap();
     let kernel_end = elf_sections_tag
@@ -58,17 +42,14 @@ pub extern fn kmain(multiboot_info_address: usize) -> ! {
         .max()
         .unwrap();
 
-
-    println!("kernel:");
-    println!("    start: 0x{:x}", kernel_start);
-    println!("    end:   0x{:x}", kernel_end);
-
     let multiboot_start = multiboot_info_address;
     let multiboot_end = multiboot_start + (boot_info.total_size as usize);
 
-    println!("multiboot:");
-    println!("    start: 0x{:x}", multiboot_start);
-    println!("    end:   0x{:x}", multiboot_end);
+    let mut frame_allocator = AreaFrameAllocator::new(kernel_start as usize,
+                                                      kernel_end as usize,
+                                                      multiboot_start,
+                                                      multiboot_end,
+                                                      memory_map_tag.memory_areas());
 
     loop {}
 }
