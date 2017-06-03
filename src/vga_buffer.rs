@@ -1,8 +1,9 @@
 use core::fmt;
 use spin::Mutex;
 
-const HEIGHT: usize = 25;
-const WIDTH: usize = 160;
+//in char not bytes
+//const HEIGHT: usize = 25;
+const WIDTH: usize = 80;
 
 pub struct Writer {
     pub col: usize,
@@ -20,7 +21,7 @@ impl Writer {
                 }
 
                 unsafe {
-                    let vga = (0xb8000 + 2 * self.col + WIDTH * self.row) as *mut u16;
+                    let vga = (0xb8000 + (self.col + WIDTH * self.row) * 2) as *mut u16;
 
                     *vga = 0x02 << 8 | byte as u16;
                 }
