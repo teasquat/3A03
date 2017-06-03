@@ -2,7 +2,7 @@ use core::fmt;
 use spin::Mutex;
 
 //in char not bytes
-//const HEIGHT: usize = 25;
+const HEIGHT: usize = 25;
 const WIDTH: usize = 80;
 
 pub struct Writer {
@@ -34,6 +34,14 @@ impl Writer {
     fn new_line(&mut self) {
         self.col = 0;
         self.row += 1;
+    }
+
+    pub fn clear(&mut self) {
+        for i in 0..WIDTH*HEIGHT {
+            unsafe {
+                *((0xb8000 + i * 2) as *mut u16) = 0x02 << 8 | b' ' as u16;
+            }
+        }
     }
 }
 

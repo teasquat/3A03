@@ -28,7 +28,7 @@ pub extern fn panic_fmt(fmt: core::fmt::Arguments, file: &'static str, line: u32
 
 #[no_mangle]
 pub extern fn kmain(multiboot_info_address: usize) -> ! {
-
+    vga_buffer::WRITER.lock().clear();
     println!("Hello world!\n");
 
     let boot_info = unsafe { multiboot2::load(multiboot_info_address) };
