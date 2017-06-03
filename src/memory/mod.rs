@@ -14,6 +14,10 @@ impl Frame {
     fn containing_address(address: usize) -> Frame {
         Frame { number: address / PAGE_SIZE }
     }
+
+    fn start_address(&self) -> self::paging::PhysicalAddress {
+        self.number * PAGE_SIZE
+    }
 }
 
 pub trait FrameAllocator {

@@ -1,6 +1,8 @@
 #![feature(lang_items,const_fn)]
 #![no_std]
 
+#[macro_use]
+extern crate bitflags;
 extern crate rlibc;
 extern crate spin;
 extern crate multiboot2;
